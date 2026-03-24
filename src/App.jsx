@@ -608,7 +608,6 @@ const STYLES = `
   .cls { color: #e0af68; }
 `;
 
-// Simple syntax highlighter
 function highlight(code) {
   if (!code) return '';
   return code
@@ -638,7 +637,7 @@ const APPROACH_LABELS = [
 ];
 
 export default function App() {
-  const [screen, setScreen] = useState("prompt"); // prompt | swipe | complete
+  const [screen, setScreen] = useState("prompt");
   const [prompt, setPrompt] = useState("");
   const [stage, setStage] = useState(0);
   const [stageDesc, setStageDesc] = useState("");
@@ -647,10 +646,9 @@ export default function App() {
   const [acceptedCode, setAcceptedCode] = useState("");
   const [newBlockAdded, setNewBlockAdded] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [swipeDir, setSwipeDir] = useState(null); // 'left' | 'right' | null
+  const [swipeDir, setSwipeDir] = useState(null);
   const [dragState, setDragState] = useState({ dragging: false, x: 0, y: 0, startX: 0, startY: 0 });
   const editorRef = useRef(null);
-  const cardRef = useRef(null);
 
   useEffect(() => {
     if (editorRef.current) {
@@ -690,6 +688,7 @@ Return this exact JSON structure:
         ? `Stage ${stageNum + 1}. Current accepted code so far:\n\`\`\`\n${currentCode}\n\`\`\`\n\nGenerate 3 options for the NEXT stage to build upon this.`
         : `Stage 1. Generate 3 different starting options (setup/initialization/structure) for this project.`;
 
+      // ✅ Calls your Vercel proxy instead of Anthropic directly
       const response = await fetch("/api/claude", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -712,7 +711,6 @@ Return this exact JSON structure:
       setSwipeDir(null);
     } catch (e) {
       console.error(e);
-      // Fallback cards
       setStageDesc("Setup & Initialize");
       setCards([
         { id: 1, title: "Try Again?", approach: "Error", description: "Something went wrong. Try regenerating.", code: "// Error loading options\n// Please try again" }
@@ -744,20 +742,14 @@ Return this exact JSON structure:
         setNewBlockAdded(true);
         setTimeout(() => setNewBlockAdded(false), 1500);
 
-        // Move to next stage
         const nextStage = stage + 1;
         setStage(nextStage);
         setSwipeDir(null);
         setCards([]);
         await generateOptions(prompt, newCode, nextStage);
       } else {
-        // Left swipe - next card
         const next = currentCardIndex + 1;
-        if (next >= cards.length) {
-          setCurrentCardIndex(next); // show "no more cards"
-        } else {
-          setCurrentCardIndex(next);
-        }
+        setCurrentCardIndex(next);
         setSwipeDir(null);
       }
     }, 380);
@@ -767,7 +759,6 @@ Return this exact JSON structure:
     await generateOptions(prompt, acceptedCode, stage);
   }
 
-  // Drag handlers
   function onMouseDown(e) {
     setDragState({ dragging: true, x: 0, y: 0, startX: e.clientX, startY: e.clientY });
   }
@@ -786,7 +777,6 @@ Return this exact JSON structure:
   const currentCard = cards[currentCardIndex];
   const hasNoMoreCards = !loading && currentCardIndex >= cards.length && cards.length > 0;
 
-  // Build card transform from drag
   const dragTransform = dragState.dragging && currentCard
     ? `translateX(${dragState.x}px) translateY(${dragState.y * 0.3}px) rotate(${dragState.x * 0.04}deg)`
     : undefined;
@@ -835,14 +825,12 @@ Return this exact JSON structure:
           </div>
         ) : (
           <>
-            {/* Header */}
             <div className="header">
               <div className="logo">SWIPEDEV</div>
               <div className="header-prompt">Building: <span>{prompt}</span></div>
               <div className="stage-badge">Stage {stage + 1}</div>
             </div>
 
-            {/* Card Panel */}
             <div className="card-panel">
               {loading && (
                 <div className="loading-overlay" style={{ position: 'absolute', borderRadius: 0 }}>
@@ -934,7 +922,6 @@ Return this exact JSON structure:
               )}
             </div>
 
-            {/* Editor Panel */}
             <div className="editor-panel">
               <div className="editor-header">
                 <div className="editor-dots">
@@ -960,9 +947,7 @@ Return this exact JSON structure:
                     </div>
                     <div
                       className="editor-code"
-                      dangerouslySetInnerHTML={{
-                        __html: highlight(acceptedCode)
-                      }}
+                      dangerouslySetInnerHTML={{ __html: highlight(acceptedCode) }}
                     />
                   </div>
                 )}
