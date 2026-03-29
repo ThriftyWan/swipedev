@@ -1,16 +1,9 @@
-# React + Vite
+# SwipeDev 💘
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Tinder for AI coding.
 
-Currently, two official plugins are available:
+Enter a prompt describing what you want to build. The AI generates 3 different code implementations for the first stage of your project — each using a different coding style or approach. Swipe right on the one you like, left to skip it.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Once you accept a card, it gets added to a code editor and the AI uses what you've chosen to generate the next stage's options — building your program step by step based on your preferences.
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The idea is that two people building the same thing can end up with completely different code depending on which styles they swipe right on.
